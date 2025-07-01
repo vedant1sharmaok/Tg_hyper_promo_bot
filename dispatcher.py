@@ -37,23 +37,30 @@ async def dispatch_campaign(campaign):
                 await client.send_message(group, text)
 
             await logs_col.insert_one({
-                "campaign": campaign["name"],
-                "group": group,
-                "account": acc["phone"],
-                "timestamp": datetime.utcnow(),
-                "status": "sent"
+    "campaign": campaign["name"],
+    "group": group,
+    "account": acc["phone"],
+    "account_owner": campaign["owner_id"],  # 👈
+    "timestamp": datetime.utcnow(),
+    "status": "failed",
+    "error": str(e)
+})
+            
             })
 
             await client.disconnect()
 
         except Exception as e:
             await logs_col.insert_one({
-                "campaign": campaign["name"],
-                "group": group,
-                "account": acc["phone"],
-                "timestamp": datetime.utcnow(),
-                "status": "failed",
-                "error": str(e)
+    "campaign": campaign["name"],
+    "group": group,
+    "account": acc["phone"],
+    "account_owner": campaign["owner_id"],  # 👈
+    "timestamp": datetime.utcnow(),
+    "status": "failed",
+    "error": str(e)
+})
+                
             })
 
         await asyncio.sleep(delay_group)
