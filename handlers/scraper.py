@@ -41,3 +41,14 @@ async def scrape_groups(msg: types.Message):
         except Exception as e:
             await m.answer(f"⚠️ Error: {str(e)}")
                   
+async def validate_group_reach(session_str, group_username):
+    client = TelegramClient(StringSession(session_str), API_ID, API_HASH)
+    await client.connect()
+    try:
+        entity = await client.get_entity(group_username)
+        await client.disconnect()
+        return True
+    except:
+        await client.disconnect()
+        return False
+        
