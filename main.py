@@ -1,1 +1,30 @@
-# main entry
+import asyncio
+from aiogram import Bot, Dispatcher
+from aiogram.enums import ParseMode
+from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.types import BotCommand
+from app.config import BOT_TOKEN
+from app.handlers.user import register_user_handlers
+from app.handlers.admin import register_admin_handlers
+
+async def set_bot_commands(bot: Bot):
+    commands = [
+        BotCommand(command="start", description="Start the bot"),
+        BotCommand(command="help", description="How it works"),
+        BotCommand(command="language", description="Choose language"),
+    ]
+    await bot.set_my_commands(commands)
+
+async def main():
+    bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
+    dp = Dispatcher(storage=MemoryStorage())
+
+    register_user_handlers(dp)
+    register_admin_handlers(dp)
+
+    await set_bot_commands(bot)
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+  # main entry
