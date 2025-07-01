@@ -11,6 +11,8 @@ dp.include_router(accounts.router)
 from app.handlers import campaigns  # Add to import list
 dp.include_router(campaigns.router)
 from app.scheduler.runner import scheduler_loop
+from app.handlers import logs
+dp.include_router(logs.router)
 
 async def main():
     bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
