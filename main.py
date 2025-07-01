@@ -8,6 +8,8 @@ from app.handlers.user import register_user_handlers
 from app.handlers.admin import register_admin_handlers
 from app.handlers import accounts  # ADD THIS
 dp.include_router(accounts.router)
+from app.handlers import campaigns  # Add to import list
+dp.include_router(campaigns.router)
 
 async def set_bot_commands(bot: Bot):
     commands = [
