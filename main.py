@@ -6,6 +6,8 @@ from aiogram.types import BotCommand
 from app.config import BOT_TOKEN
 from app.handlers.user import register_user_handlers
 from app.handlers.admin import register_admin_handlers
+from app.handlers import accounts  # ADD THIS
+dp.include_router(accounts.router)
 
 async def set_bot_commands(bot: Bot):
     commands = [
