@@ -5,4 +5,5 @@ mongo_client = AsyncIOMotorClient(MONGO_URI)
 db = mongo_client.tgPromoDB
 
 users_col = db.users
+logs_col = db.logs
 # MongoDB setup
