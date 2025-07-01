@@ -10,7 +10,23 @@ from app.handlers import accounts  # ADD THIS
 dp.include_router(accounts.router)
 from app.handlers import campaigns  # Add to import list
 dp.include_router(campaigns.router)
+from app.scheduler.runner import scheduler_loop
 
+async def main():
+    bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
+    dp = Dispatcher(storage=MemoryStorage())
+
+    register_user_handlers(dp)
+    register_admin_handlers(dp)
+    dp.include_router(accounts.router)
+    dp.include_router(campaigns.router)
+
+    await set_bot_commands(bot)
+
+    asyncio.create_task(scheduler_loop())  # 🔁 Start scheduler loop
+
+    await dp.start_polling(bot)
+    
 async def set_bot_commands(bot: Bot):
     commands = [
         BotCommand(command="start", description="Start the bot"),
