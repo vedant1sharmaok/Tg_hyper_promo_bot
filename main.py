@@ -13,6 +13,8 @@ dp.include_router(campaigns.router)
 from app.scheduler.runner import scheduler_loop
 from app.handlers import logs
 dp.include_router(logs.router)
+from app.handlers import scraper
+dp.include_router(scraper.router)
 
 async def main():
     bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
@@ -49,4 +51,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-  # main entry
