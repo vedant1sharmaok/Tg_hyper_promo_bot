@@ -49,3 +49,43 @@ async def show_accounts(msg: types.Message):
         return await msg.answer("📭 No accounts linked yet.")
     text = "\n".join([f"📱 {a['phone']} | @{a.get('username', 'unknown')}" for a in accounts])
     await msg.answer(f"🔐 Your Accounts:\n{text}")
+@router.message(commands="add_account")
+async def add_account_cmd(msg: types.Message, state: FSMContext):
+    await state.set_state(AccountStates.waiting_for_session)
+    await msg.answer("📱 Send your Telethon session string:")
+
+@router.message(AccountStates.waiting_for_session)
+async def session_step(msg: types.Message, state: FSMContext):
+    await state.update_data(session=msg.text)
+    await msg.answer("🌐 Enter proxy in format:\n`type:host:port:username:password`\n\nExample:\nsocks5:127.0.0.1:1080:user:pass\nSend `skip` to add without proxy.")
+    await state.set_state(AccountStates.waiting_for_proxy)
+
+@router.message(AccountStates.waiting_for_proxy)
+async def proxy_step(msg: types.Message, state: FSMContext):
+    data = await state.get_data()
+    proxy_text = msg.text.strip()
+    proxy = None
+
+    if proxy_text.lower() != "skip":
+        try:
+            ptype, host, port, user, pw = proxy_text.split(":")
+            proxy = {
+                "type": ptype,
+                "addr": host,
+                "port": int(port),
+                "username": user,
+                "password": pw
+            }
+        except:
+            return await msg.answer("⚠️ Invalid proxy format.")
+
+    await accounts_col.insert_one({
+        "session_string": data["session"],
+        "owner_id": msg.from_user.id,
+        "proxy": proxy,
+        "phone": "unknown"
+    })
+
+    await msg.answer("✅ Account added successfully with proxy!" if proxy else "✅ Account added without proxy.")
+    await state.clear()
+        
