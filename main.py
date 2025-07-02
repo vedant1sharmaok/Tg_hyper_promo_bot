@@ -24,6 +24,8 @@ dp.include_router(import_export.router)
 from fastapi import FastAPI, Request, HTTPException, Depends
 from fastapi.responses import JSONResponse
 from app.api import api_router
+from app.handlers import session_backup
+dp.include_router(session_backup.router)
 
 app = FastAPI()
 app.include_router(api_router, prefix="/api")
