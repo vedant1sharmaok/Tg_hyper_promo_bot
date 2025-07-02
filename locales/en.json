@@ -1,0 +1,8 @@
+{
+  "welcome": "👋 Welcome to TG Hyper Promo Bot!",
+  "help": "📋 This bot helps you promote messages to Telegram groups.",
+  "set_language": "🌐 Select your language:",
+  "language_saved": "✅ Language updated.",
+  "no_accounts": "🔐 You must add an account first using /add_account",
+  "campaign_created": "✅ Campaign saved and activated!"
+}
