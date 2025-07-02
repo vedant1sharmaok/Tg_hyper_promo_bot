@@ -19,6 +19,14 @@ from app.handlers import ai
 dp.include_router(ai.router)
 from app.handlers import admin_panel
 dp.include_router(admin_panel.router)
+from app.handlers import import_export
+dp.include_router(import_export.router)
+from fastapi import FastAPI, Request, HTTPException, Depends
+from fastapi.responses import JSONResponse
+from app.api import api_router
+
+app = FastAPI()
+app.include_router(api_router, prefix="/api")
 
 async def main():
     bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
