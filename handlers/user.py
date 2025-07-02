@@ -1,6 +1,22 @@
 from aiogram import Router, types
 from app.database import users_col
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+from app.services.language import get_lang
+from app.database import users_col
 
+@router.message(commands="language")
+async def language_cmd(msg: types.Message):
+    kb = InlineKeyboardBuilder()
+    kb.button(text="🇬🇧 English", callback_data="lang_en")
+    kb.button(text="🇮🇳 हिन्दी", callback_data="lang_hi")
+    await msg.answer("🌐 Choose your language:", reply_markup=kb.as_markup())
+
+@router.callback_query(F.data.startswith("lang_"))
+async def set_lang(call: types.CallbackQuery):
+    lang_code = call.data.split("_")[1]
+    await users_col.update_one({"telegram_id": call.from_user.id}, {"$set": {"language": lang_code}})
+    await call.message.edit_text("✅ Language updated.")
+    
 router = Router()
 
 @router.message(commands="start")
