@@ -26,7 +26,17 @@ from fastapi.responses import JSONResponse
 from app.api import api_router
 from app.handlers import session_backup
 dp.include_router(session_backup.router)
+from app.scheduler import daily_report
+import asyncio
 
+async def scheduler_loop(bot):
+    while True:
+        now = datetime.now(tz=IST)
+        if now.hour == 9 and now.minute < 2:  # Around 9:00 AM IST
+            await daily_report(bot)
+            await asyncio.sleep(120)  # wait to prevent double-run
+        await asyncio.sleep(60)
+        
 app = FastAPI()
 app.include_router(api_router, prefix="/api")
 
