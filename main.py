@@ -17,6 +17,8 @@ from app.handlers import scraper
 dp.include_router(scraper.router)
 from app.handlers import ai
 dp.include_router(ai.router)
+from app.handlers import admin_panel
+dp.include_router(admin_panel.router)
 
 async def main():
     bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
