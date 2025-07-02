@@ -24,3 +24,26 @@ async def export_user_campaigns(msg: types.Message):
 
     await msg.answer_document(FSInputFile(filepath), caption="✅ Campaigns exported.")
   
+@router.message(commands="import_campaigns")
+async def import_campaigns(msg: types.Message):
+    await msg.answer("📥 Send your JSON export file to import campaigns.")
+
+@router.message(F.document)
+async def handle_import_file(msg: types.Message):
+    if not msg.document.file_name.endswith(".json"):
+        return await msg.answer("❌ Please upload a valid JSON file.")
+
+    file_path = f"static/imports/{msg.document.file_name}"
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    await msg.bot.download(msg.document, destination=file_path)
+
+    with open(file_path, "r", encoding="utf-8") as f:
+        try:
+            data = json.load(f)
+            for camp in data:
+                camp["owner_id"] = msg.from_user.id
+                await campaigns_col.insert_one(camp)
+            await msg.answer("✅ Campaigns imported successfully!")
+        except Exception as e:
+            await msg.answer(f"⚠️ Failed to import: {str(e)}")
+        
