@@ -62,7 +62,9 @@ async def set_bot_commands(bot: Bot):
         BotCommand(command="language", description="Choose language"),
     ]
     await bot.set_my_commands(commands)
-
+async def on_startup(dispatcher):
+    asyncio.create_task(scheduler_loop(bot))
+    
 async def main():
     bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
     dp = Dispatcher(storage=MemoryStorage())
