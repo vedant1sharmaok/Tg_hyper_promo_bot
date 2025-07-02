@@ -24,7 +24,8 @@ async def dispatch_campaign(campaign):
         acc = accounts[acc_index]
 
         try:
-            client = TelegramClient(StringSession(acc["session_string"]), API_ID, API_HASH)
+            from app.services.proxy import get_client
+client = get_client(acc["session_string"], acc.get("proxy"))
             await client.connect()
 
             if not await client.is_user_authorized():
