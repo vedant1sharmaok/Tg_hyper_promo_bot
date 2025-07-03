@@ -1,6 +1,6 @@
 from telethon import TelegramClient
 from telethon.sessions import StringSession
-from app.config import API_ID, API_HASH
+from config import API_ID, API_HASH
 
 async def search_public_groups(session_str, query, limit=10):
     client = TelegramClient(StringSession(session_str), API_ID, API_HASH)
