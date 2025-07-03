@@ -1,8 +1,8 @@
 import json
 import os
-from app.database import users_col
+from database import users_col
 
-LANG_PATH = "Tg_hyper_promo_bot/locales"
+LANG_PATH = "locales"
 
 _cache = {}
 
