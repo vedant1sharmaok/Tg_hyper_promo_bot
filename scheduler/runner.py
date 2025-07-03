@@ -1,7 +1,7 @@
 import asyncio
 from datetime import datetime
-from app.database import db
-from app.services.dispatcher import dispatch_campaign
+from database import db
+from services.dispatcher import dispatch_campaign
 
 campaigns_col = db.campaigns
 
