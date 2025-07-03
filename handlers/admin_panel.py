@@ -1,6 +1,6 @@
 from aiogram import Router, types
-from app.database import users_col, campaigns_col, accounts_col
-from app.config import ADMINS
+from database import users_col, campaigns_col, accounts_col
+from config import ADMINS
 
 router = Router()
 
