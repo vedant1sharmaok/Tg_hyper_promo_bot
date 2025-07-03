@@ -1,4 +1,5 @@
-from aiogram import Router, types
+from aiogram import Router, types, F
+from aiogram.filters import Command
 from aiogram.types import FSInputFile
 from database import campaigns_col
 import json
@@ -6,7 +7,7 @@ import os
 
 router = Router()
 
-@router.message(commands="export_campaigns")
+@router.message(commands=("export_campaigns"))
 async def export_user_campaigns(msg: types.Message):
     user_id = msg.from_user.id
     campaigns = await campaigns_col.find({"owner_id": user_id}).to_list(100)
@@ -24,7 +25,7 @@ async def export_user_campaigns(msg: types.Message):
 
     await msg.answer_document(FSInputFile(filepath), caption="✅ Campaigns exported.")
   
-@router.message(commands="import_campaigns")
+@router.message(commands=("import_campaigns")).wg: 
 async def import_campaigns(msg: types.Message):
     await msg.answer("📥 Send your JSON export file to import campaigns.")
 
