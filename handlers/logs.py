@@ -1,6 +1,6 @@
 from aiogram import Router, types
-from app.database import logs_col
-from app.config import ADMINS
+from database import logs_col
+from config import ADMINS
 
 router = Router()
 
