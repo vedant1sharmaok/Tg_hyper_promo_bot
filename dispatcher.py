@@ -1,8 +1,8 @@
 import asyncio
 from telethon.sync import TelegramClient
 from telethon.sessions import StringSession
-from app.config import API_ID, API_HASH
-from app.database import db
+from config import API_ID, API_HASH
+from database import db
 
 accounts_col = db.accounts
 logs_col = db.logs
