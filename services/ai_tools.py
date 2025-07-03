@@ -1,5 +1,5 @@
 import openai
-from app.config import OPENAI_KEY
+from config import OPENAI_KEY
 
 openai.api_key = OPENAI_KEY
 
