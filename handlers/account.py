@@ -89,3 +89,5 @@ async def proxy_step(msg: types.Message, state: FSMContext):
     await msg.answer("✅ Account added successfully with proxy!" if proxy else "✅ Account added without proxy.")
     await state.clear()
         
+__all__ = ["router"]
+                    
