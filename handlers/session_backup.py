@@ -1,8 +1,8 @@
 from aiogram import Router, types
 from aiogram.types import FSInputFile
 import os
-from app.database import accounts_col
-from app.utils.sessions import string_to_session_file
+from database import accounts_col
+from utils.sessions import string_to_session_file
 
 router = Router()
 
