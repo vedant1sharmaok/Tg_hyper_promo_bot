@@ -1,0 +1,16 @@
+name: tg-hyper-promo-bot
+routes:
+  - path: /
+    port: 8080
+    protocol: http
+
+build:
+  env:
+    - BOT_TOKEN
+    - API_ID
+    - API_HASH
+    - MONGODB_URI
+    - OPENAI_KEY
+    - ADMINS
+    - API_KEYS
+    
