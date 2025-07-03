@@ -1,6 +1,6 @@
 from aiogram import Router, types, F
-from app.services.group_scraper import search_public_groups
-from app.services.accounts import get_user_accounts
+from services.group_scraper import search_public_groups
+from services.accounts import get_user_accounts
 
 router = Router()
 
