@@ -1,6 +1,6 @@
 from aiogram import Router, types
 from aiogram.types import FSInputFile
-from app.database import campaigns_col
+from database import campaigns_col
 import json
 import os
 
