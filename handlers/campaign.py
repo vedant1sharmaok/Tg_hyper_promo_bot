@@ -1,7 +1,7 @@
 from aiogram import Router, types, F
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
-from app.services.campaigns import save_campaign, get_user_campaigns, update_campaign_status
+from services.campaigns import save_campaign, get_user_campaigns, update_campaign_status
 
 router = Router()
 
