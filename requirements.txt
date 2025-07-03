@@ -7,3 +7,4 @@ pytz
 fastapi
 uvicorn
 python-dotenv
+python-3.12.3
