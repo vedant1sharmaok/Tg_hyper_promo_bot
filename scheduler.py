@@ -1,6 +1,6 @@
 import asyncio
 from datetime import datetime, timedelta
-from app.database import logs_col, users_col
+from database import logs_col, users_col
 from aiogram import Bot
 from collections import defaultdict
 import pytz
