@@ -1,5 +1,5 @@
 from aiogram import Router, types
-from app.config import ADMINS
+from config import ADMINS
 
 router = Router()
 
