@@ -3,6 +3,7 @@ from database import users_col
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from services.language import get_lang
 from database import users_col
+router = Router()
 
 @router.message(commands="language")
 async def language_cmd(msg: types.Message):
@@ -16,8 +17,6 @@ async def set_lang(call: types.CallbackQuery):
     lang_code = call.data.split("_")[1]
     await users_col.update_one({"telegram_id": call.from_user.id}, {"$set": {"language": lang_code}})
     await call.message.edit_text("✅ Language updated.")
-    
-router = Router()
 
 @router.message(commands="start")
 async def start_cmd(msg: types.Message):
