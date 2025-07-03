@@ -1,4 +1,4 @@
-from app.database import db
+from database import db
 
 accounts_col = db.accounts
 
