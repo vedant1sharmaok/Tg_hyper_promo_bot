@@ -1,10 +1,11 @@
-from aiogram import Router, types
+from aiogram import Router, types, F
+from aiogram.filters import Command
 from database import logs_col
 from config import ADMINS
 
 router = Router()
 
-@router.message(commands="my_logs")
+@router.message(commands=("my_logs"))
 async def my_logs(msg: types.Message):
     user_id = msg.from_user.id
     logs = await logs_col.find({"account_owner": user_id}).to_list(100)
@@ -23,7 +24,7 @@ async def my_logs(msg: types.Message):
     )
     await msg.answer(text)
 
-@router.message(commands="all_logs")
+@router.message(commands=("all_logs"))
 async def all_logs(msg: types.Message):
     if msg.from_user.id not in ADMINS:
         return await msg.answer("🚫 You're not an admin.")
