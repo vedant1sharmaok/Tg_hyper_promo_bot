@@ -1,8 +1,8 @@
 from aiogram import Router, types
-from app.database import users_col
+from database import users_col
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from app.services.language import get_lang
-from app.database import users_col
+from services.language import get_lang
+from database import users_col
 
 @router.message(commands="language")
 async def language_cmd(msg: types.Message):
