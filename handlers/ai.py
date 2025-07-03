@@ -1,5 +1,5 @@
 from aiogram import Router, types, F
-from app.services.ai_tools import generate_promo, translate_text, generate_variations, basic_spam_score
+from services.ai_tools import generate_promo, translate_text, generate_variations, basic_spam_score
 
 router = Router()
 
