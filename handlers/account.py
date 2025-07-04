@@ -7,6 +7,12 @@ from services.accounts import save_account, get_user_accounts
 
 router = Router()
 
+class AccountStates:
+    # Define the states for the account FSM process
+    waiting_for_session = State()
+    waiting_for_verification = State()
+    active = State()
+    
 class LoginState(StatesGroup):
     waiting_for_phone = State()
     waiting_for_otp = State()
