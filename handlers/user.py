@@ -6,7 +6,7 @@ from services.language import get_lang
 from database import users_col
 router = Router()
 
-@router.message(command("language"))
+@router.message(Command("language"))
 async def language_cmd(msg: types.Message):
     kb = InlineKeyboardBuilder()
     kb.button(text="🇬🇧 English", callback_data="lang_en")
@@ -19,7 +19,7 @@ async def set_lang(call: types.CallbackQuery):
     await users_col.update_one({"telegram_id": call.from_user.id}, {"$set": {"language": lang_code}})
     await call.message.edit_text("✅ Language updated.")
 
-@router.message(command("start"))
+@router.message(Command("start"))
 async def start_cmd(msg: types.Message):
     user = await users_col.find_one({"telegram_id": msg.from_user.id})
     if not user:
@@ -30,10 +30,10 @@ async def start_cmd(msg: types.Message):
         })
     await msg.answer("👋 Welcome to TG Hyper Promo Bot!\nUse /help to get started.")
 
-@router.message(command("help"))
+@router.message(Command("help"))
 async def help_cmd(msg: types.Message):
     await msg.answer("📋 This bot helps you create and manage Telegram marketing campaigns.")
 
-@router.message(command("language"))
+@router.message(Command("language"))
 async def language_cmd(msg: types.Message):
     await msg.answer("🌐 Language switching will be supported soon. Default: English 🇬🇧")
