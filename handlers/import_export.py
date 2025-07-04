@@ -25,7 +25,7 @@ async def export_user_campaigns(msg: types.Message):
 
     await msg.answer_document(FSInputFile(filepath), caption="✅ Campaigns exported.")
   
-@router.message(Command("import_campaigns")).wg: 
+@router.message(Command("import_campaigns"))
 async def import_campaigns(msg: types.Message):
     await msg.answer("📥 Send your JSON export file to import campaigns.")
 
