@@ -4,7 +4,7 @@ from services.ai_tools import generate_promo, translate_text, generate_variation
 
 router = Router()
 
-@router.message(Commands("ai_write"))
+@router.message(Command("ai_write"))
 async def ai_writer(msg: types.Message):
     await msg.answer("🧠 What’s your promo topic?")
 
@@ -15,7 +15,7 @@ async def ai_writer(msg: types.Message):
         text = await generate_promo(topic)
         await inner.answer(f"✅ Here's a promo:\n\n{text}")
 
-@router.message(Commands("ai_translate"))
+@router.message(Command("ai_translate"))
 async def ai_translate(msg: types.Message):
     await msg.answer("🌐 Send the text to translate (reply) and language code (e.g., Hindi):")
 
@@ -28,7 +28,7 @@ async def ai_translate(msg: types.Message):
         translated = await translate_text(text, lang)
         await inner.answer(f"🈶 Translated:\n\n{translated}")
 
-@router.message(Commands("ai_variation"))
+@router.message(Command("ai_variation"))
 async def ai_variation(msg: types.Message):
     await msg.answer("🔁 Send a message to generate 3 variations:")
 
@@ -38,7 +38,7 @@ async def ai_variation(msg: types.Message):
         variations = await generate_variations(base)
         await inner.answer(f"🔁 Variations:\n\n{variations}")
 
-@router.message(Commands("ai_score"))
+@router.message(Command("ai_score"))
 async def ai_score(msg: types.Message):
     await msg.answer("🧪 Send a promo message to check spam score:")
 
