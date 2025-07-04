@@ -1,9 +1,10 @@
-from aiogram import Router, types
+from aiogram import Router, types, F
+from aiogram.filters import Command
 from config import ADMINS
 
 router = Router()
 
-@router.message(commands="admin")
+@router.message(commands("admin"))
 async def admin_panel(msg: types.Message):
     if msg.from_user.id not in ADMINS:
         return await msg.answer("🚫 You are not an admin.")
