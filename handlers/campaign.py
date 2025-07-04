@@ -17,7 +17,7 @@ class CampaignState(StatesGroup):
 
 temp_campaign_data = {}
 
-@router.message(Commands("new_campaign"))
+@router.message(Command("new_campaign"))
 async def new_campaign(msg: types.Message, state: FSMContext):
     await msg.answer("📛 Enter campaign name:")
     await state.set_state(CampaignState.name)
