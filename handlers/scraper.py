@@ -5,7 +5,7 @@ from services.accounts import get_user_accounts
 
 router = Router()
 
-@router.message(commands("scrape_groups"))
+@router.message(Commands("scrape_groups"))
 async def scrape_groups(msg: types.Message):
     accounts = await get_user_accounts(msg.from_user.id)
     if not accounts:
