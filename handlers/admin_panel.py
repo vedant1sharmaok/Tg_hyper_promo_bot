@@ -8,14 +8,14 @@ router = Router()
 def is_admin(user_id):
     return user_id in ADMINS
 
-@router.message(Commands("panel"))
+@router.message(Command("panel"))
 async def panel_main(msg: types.Message):
     if not is_admin(msg.from_user.id):
         return await msg.answer("🚫 You’re not authorized.")
 
     await msg.answer("🛠️ Admin Panel\nUse /stats to view system stats.")
 
-@router.message(Commands("stats"))
+@router.message(Command("stats"))
 async def panel_stats(msg: types.Message):
     if not is_admin(msg.from_user.id):
         return await msg.answer("🚫 You’re not authorized.")
