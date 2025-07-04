@@ -1,6 +1,6 @@
 from telethon import TelegramClient
 from telethon.sessions import StringSession
-from app.config import API_ID, API_HASH
+from config import API_ID, API_HASH
 
 async def login_with_otp(phone: str, code_callback, password_callback=None):
     client = TelegramClient(StringSession(), API_ID, API_HASH)
