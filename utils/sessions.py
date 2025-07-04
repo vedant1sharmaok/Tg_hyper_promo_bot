@@ -1,6 +1,6 @@
 from telethon.sessions import StringSession
 from telethon.sync import TelegramClient
-from app.config import API_ID, API_HASH
+from config import API_ID, API_HASH
 
 def string_to_session_file(session_string, file_path):
     client = TelegramClient(file_path, API_ID, API_HASH, session=StringSession(session_string))
