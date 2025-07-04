@@ -5,7 +5,7 @@ from config import ADMINS
 
 router = Router()
 
-@router.message(Commands("my_logs"))
+@router.message(Command("my_logs"))
 async def my_logs(msg: types.Message):
     user_id = msg.from_user.id
     logs = await logs_col.find({"account_owner": user_id}).to_list(100)
@@ -24,7 +24,7 @@ async def my_logs(msg: types.Message):
     )
     await msg.answer(text)
 
-@router.message(Commands("all_logs"))
+@router.message(Command("all_logs"))
 async def all_logs(msg: types.Message):
     if msg.from_user.id not in ADMINS:
         return await msg.answer("🚫 You're not an admin.")
