@@ -10,6 +10,7 @@ router = Router()
 class AccountStates(StatesGroup):
     # Define the states for the account FSM process
     waiting_for_session = State()
+    waiting_for_proxy = State()
     waiting_for_verification = State()
     active = State()
     
