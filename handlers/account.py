@@ -1,4 +1,5 @@
 from aiogram import Router, types, F
+from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from app.clients.telethon_client import login_with_otp
@@ -13,7 +14,7 @@ class LoginState(StatesGroup):
 
 user_login_data = {}
 
-@router.message(commands="add_account")
+@router.message(commands("add_account"))
 async def start_login(msg: types.Message, state: FSMContext):
     await msg.answer("📱 Enter your phone number (with country code):")
     await state.set_state(LoginState.waiting_for_phone)
@@ -42,14 +43,14 @@ async def get_phone(msg: types.Message, state: FSMContext):
     finally:
         await state.clear()
 
-@router.message(commands="my_accounts")
+@router.message(commands("my_accounts"))
 async def show_accounts(msg: types.Message):
     accounts = await get_user_accounts(msg.from_user.id)
     if not accounts:
         return await msg.answer("📭 No accounts linked yet.")
     text = "\n".join([f"📱 {a['phone']} | @{a.get('username', 'unknown')}" for a in accounts])
     await msg.answer(f"🔐 Your Accounts:\n{text}")
-@router.message(commands="add_account")
+@router.message(commands("add_account"))
 async def add_account_cmd(msg: types.Message, state: FSMContext):
     await state.set_state(AccountStates.waiting_for_session)
     await msg.answer("📱 Send your Telethon session string:")
