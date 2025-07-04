@@ -1,4 +1,5 @@
 from aiogram import Router, types, F
+from aiogram.filters import Command
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 from services.campaigns import save_campaign, get_user_campaigns, update_campaign_status
@@ -16,7 +17,7 @@ class CampaignState(StatesGroup):
 
 temp_campaign_data = {}
 
-@router.message(commands="new_campaign")
+@router.message(commands("new_campaign"))
 async def new_campaign(msg: types.Message, state: FSMContext):
     await msg.answer("📛 Enter campaign name:")
     await state.set_state(CampaignState.name)
