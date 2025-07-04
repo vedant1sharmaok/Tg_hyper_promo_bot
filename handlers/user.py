@@ -37,3 +37,6 @@ async def help_cmd(msg: types.Message):
 @router.message(Command("language"))
 async def language_cmd(msg: types.Message):
     await msg.answer("🌐 Language switching will be supported soon. Default: English 🇬🇧")
+
+def register_user_handlers(dp: Router):
+    dp.include_router(router)
