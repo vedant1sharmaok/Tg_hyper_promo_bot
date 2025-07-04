@@ -2,8 +2,8 @@ from aiogram import Router, types, F
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
-from app.clients.telethon_client import login_with_otp
-from app.services.accounts import save_account, get_user_accounts
+from clients.telethon_client import login_with_otp
+from services.accounts import save_account, get_user_accounts
 
 router = Router()
 
