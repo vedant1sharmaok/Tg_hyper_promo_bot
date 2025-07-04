@@ -7,7 +7,7 @@ from utils.sessions import string_to_session_file
 
 router = Router()
 
-@router.message(commands("backup_sessions"))
+@router.message(Commands("backup_sessions"))
 async def backup_sessions(msg: types.Message):
     user_id = msg.from_user.id
     accounts = await accounts_col.find({"owner_id": user_id}).to_list(5)
