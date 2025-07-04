@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from app.database import campaigns_col, logs_col
+from database import campaigns_col, logs_col
 from .auth import get_user_from_token
 from datetime import datetime
 
