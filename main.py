@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from config import BOT_TOKEN
 from handlers.user import register_user_handlers
 from handlers.admin import register_admin_handlers
-from handlers import accounts, campaigns, logs, scraper, ai, admin_panel, import_export, session_backup
+from handlers import account, campaigns, logs, scraper, ai, admin_panel, import_export, session_backup
 from api import api_router
 from scheduler import daily_report
 
