@@ -6,12 +6,12 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import BotCommand
 
-from app.config import BOT_TOKEN
-from app.handlers.user import register_user_handlers
-from app.handlers.admin import register_admin_handlers
-from app.handlers import accounts, campaigns, logs, scraper, ai, admin_panel, import_export, session_backup
-from app.api import api_router
-from app.scheduler import daily_report
+from config import BOT_TOKEN
+from handlers.user import register_user_handlers
+from handlers.admin import register_admin_handlers
+from handlers import account, campaign, logs, scraper, ai, admin_panel, import_export, session_backup
+from api import api_router
+from scheduler import daily_report
 
 # === GLOBAL BOT & DISPATCHER ===
 bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
