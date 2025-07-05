@@ -61,9 +61,10 @@ async def scheduler_loop():
 async def on_startup():
     await set_bot_commands(bot)
     
-    # Directly create the tasks for scheduler and polling
-    asyncio.create_task(scheduler_loop())
-    asyncio.create_task(dp.start_polling(bot))
+    # Only start polling once, no redundant polling starts
+    if not dp.is_polling():  # Check to ensure polling is not already started
+        asyncio.create_task(scheduler_loop())
+        asyncio.create_task(dp.start_polling(bot))
 
 # === SCRIPT ENTRYPOINT (for local/testing) ===
 if __name__ == "__main__":
