@@ -5,6 +5,7 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import BotCommand
 from fastapi import FastAPI
+from aiogram.client.default import DefaultBotProperties
 
 from config import BOT_TOKEN
 from handlers.user import register_user_handlers
@@ -44,7 +45,10 @@ app.include_router(api_router, prefix="/api")
 
 # Main startup logic
 async def main():
-    bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
+    bot = Bot(
+    token=BOT_TOKEN,
+    default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+        )
     register_user_handlers(dp)
     register_admin_handlers(dp)
     await set_bot_commands(bot)
