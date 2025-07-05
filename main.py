@@ -1,25 +1,27 @@
 import asyncio
 from datetime import datetime
+from fastapi import FastAPI
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import BotCommand
-from fastapi import FastAPI
-from aiogram.client.default import DefaultBotProperties
 
-from config import BOT_TOKEN
-from handlers.user import register_user_handlers
-from handlers.admin import register_admin_handlers
-from handlers import account, campaign, logs, scraper, ai, admin_panel, import_export, session_backup
-from api import api_router
-from scheduler import daily_report
+from app.config import BOT_TOKEN
+from app.handlers.user import register_user_handlers
+from app.handlers.admin import register_admin_handlers
+from app.handlers import accounts, campaigns, logs, scraper, ai, admin_panel, import_export, session_backup
+from app.api import api_router
+from app.scheduler import daily_report
 
-# Dispatcher instance
+# === GLOBAL BOT & DISPATCHER ===
+bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
 dp = Dispatcher(storage=MemoryStorage())
 
-# Routers
-dp.include_router(account.router)
-dp.include_router(campaign.router)
+# === REGISTER ALL ROUTERS ON GLOBAL DISPATCHER ===
+register_user_handlers(dp)
+register_admin_handlers(dp)
+dp.include_router(accounts.router)
+dp.include_router(campaigns.router)
 dp.include_router(logs.router)
 dp.include_router(scraper.router)
 dp.include_router(ai.router)
@@ -27,35 +29,15 @@ dp.include_router(admin_panel.router)
 dp.include_router(import_export.router)
 dp.include_router(session_backup.router)
 
-# Timezone setup (IST fallback)
-IST = datetime.now().astimezone().tzinfo
-
-# Scheduler loop for daily reports
-async def scheduler_loop(bot):
-    while True:
-        now = datetime.now(tz=IST)
-        if now.hour == 9 and now.minute < 2:  # Around 9:00 AM IST
-            await daily_report(bot)
-            await asyncio.sleep(120)  # prevent double-run
-        await asyncio.sleep(60)
-
-# FastAPI for API endpoints
+# === FASTAPI APP ===
 app = FastAPI()
 app.include_router(api_router, prefix="/api")
 
-# Main startup logic
-async def main():
-    bot = Bot(
-    token=BOT_TOKEN,
-    default=DefaultBotProperties(parse_mode=ParseMode.HTML)
-        )
-    register_user_handlers(dp)
-    register_admin_handlers(dp)
-    await set_bot_commands(bot)
-    asyncio.create_task(scheduler_loop(bot))
-    await dp.start_polling(bot)
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
-# Set bot commands for menu
+# === BOT COMMANDS SETUP ===
 async def set_bot_commands(bot: Bot):
     commands = [
         BotCommand(command="start", description="Start the bot"),
@@ -64,7 +46,29 @@ async def set_bot_commands(bot: Bot):
     ]
     await bot.set_my_commands(commands)
 
-# Entry point
+# === SCHEDULER LOOP ===
+async def scheduler_loop():
+    IST = datetime.now().astimezone().tzinfo
+    while True:
+        now = datetime.now(tz=IST)
+        if now.hour == 9 and now.minute < 2:  # Around 9:00 AM IST
+            await daily_report(bot)
+            await asyncio.sleep(120)  # wait to prevent double-run
+        await asyncio.sleep(60)
+
+# === FASTAPI STARTUP HOOK ===
+@app.on_event("startup")
+async def on_startup():
+    await set_bot_commands(bot)
+    asyncio.create_task(scheduler_loop())
+    asyncio.create_task(dp.start_polling(bot))
+
+# === SCRIPT ENTRYPOINT (for local/testing) ===
 if __name__ == "__main__":
-    asyncio.run(main())
-    
+    async def run():
+        await set_bot_commands(bot)
+        await asyncio.gather(
+            scheduler_loop(),
+            dp.start_polling(bot)
+        )
+    asyncio.run(run())
