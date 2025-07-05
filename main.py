@@ -61,10 +61,9 @@ async def scheduler_loop():
 async def on_startup():
     await set_bot_commands(bot)
     
-    # Only start polling once during FastAPI startup
-    if not dp.is_polling():
-        asyncio.create_task(scheduler_loop())
-        asyncio.create_task(dp.start_polling(bot))
+    # Directly create the tasks for scheduler and polling
+    asyncio.create_task(scheduler_loop())
+    asyncio.create_task(dp.start_polling(bot))
 
 # === SCRIPT ENTRYPOINT (for local/testing) ===
 if __name__ == "__main__":
