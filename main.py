@@ -6,6 +6,8 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import BotCommand
 from fastapi import FastAPI
 from aiogram.client.default import DefaultBotProperties
+import threading
+import uvicorn
 
 from config import BOT_TOKEN
 from handlers.user import register_user_handlers
@@ -39,16 +41,25 @@ async def scheduler_loop(bot):
             await asyncio.sleep(120)  # prevent double-run
         await asyncio.sleep(60)
 
-# FastAPI for API endpoints
+# FastAPI for API endpoints and health check
 app = FastAPI()
+
+# Health check endpoint
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
 app.include_router(api_router, prefix="/api")
+
+def run_fastapi():
+    uvicorn.run(app, host="0.0.0.0", port=8080, log_level="info")
 
 # Main startup logic
 async def main():
     bot = Bot(
-    token=BOT_TOKEN,
-    default=DefaultBotProperties(parse_mode=ParseMode.HTML)
-        )
+        token=BOT_TOKEN,
+        default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+    )
     register_user_handlers(dp)
     register_admin_handlers(dp)
     await set_bot_commands(bot)
@@ -66,5 +77,6 @@ async def set_bot_commands(bot: Bot):
 
 # Entry point
 if __name__ == "__main__":
+    # Start FastAPI health check server in a separate thread
+    threading.Thread(target=run_fastapi, daemon=True).start()
     asyncio.run(main())
-    
