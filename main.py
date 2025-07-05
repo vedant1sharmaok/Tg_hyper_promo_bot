@@ -60,15 +60,20 @@ async def scheduler_loop():
 @app.on_event("startup")
 async def on_startup():
     await set_bot_commands(bot)
-    asyncio.create_task(scheduler_loop())
-    asyncio.create_task(dp.start_polling(bot))
+    
+    # Only start polling once during FastAPI startup
+    if not dp.is_polling():
+        asyncio.create_task(scheduler_loop())
+        asyncio.create_task(dp.start_polling(bot))
 
 # === SCRIPT ENTRYPOINT (for local/testing) ===
 if __name__ == "__main__":
+    # Ensure polling only happens if running locally, not in FastAPI
     async def run():
         await set_bot_commands(bot)
         await asyncio.gather(
             scheduler_loop(),
             dp.start_polling(bot)
         )
+    
     asyncio.run(run())
