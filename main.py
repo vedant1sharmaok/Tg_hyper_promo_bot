@@ -1,56 +1,60 @@
 import asyncio
-
-# Dispatcher instance
-dp = Dispatcher(storage=MemoryStorage())
-
-# Routers
-dp.include_router(account.router)
-dp.include_router(campaign.router)
+from aiogram import Bot, Dispatcher
+from aiogram.enums import ParseMode
+from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.types import BotCommand
+from app.config import BOT_TOKEN
+from app.handlers.user import register_user_handlers
+from app.handlers.admin import register_admin_handlers
+from app.handlers import accounts  # ADD THIS
+dp.include_router(accounts.router)
+from app.handlers import campaigns  # Add to import list
+dp.include_router(campaigns.router)
+from app.scheduler.runner import scheduler_loop
+from app.handlers import logs
 dp.include_router(logs.router)
+from app.handlers import scraper
 dp.include_router(scraper.router)
+from app.handlers import ai
 dp.include_router(ai.router)
+from app.handlers import admin_panel
 dp.include_router(admin_panel.router)
+from app.handlers import import_export
 dp.include_router(import_export.router)
+from fastapi import FastAPI, Request, HTTPException, Depends
+from fastapi.responses import JSONResponse
+from app.api import api_router
+from app.handlers import session_backup
 dp.include_router(session_backup.router)
+from app.scheduler import daily_report
+import asyncio
 
-# Timezone setup (IST fallback)
-IST = datetime.now().astimezone().tzinfo
-
-# Scheduler loop for daily reports
 async def scheduler_loop(bot):
     while True:
         now = datetime.now(tz=IST)
         if now.hour == 9 and now.minute < 2:  # Around 9:00 AM IST
             await daily_report(bot)
-            await asyncio.sleep(120)  # prevent double-run
+            await asyncio.sleep(120)  # wait to prevent double-run
         await asyncio.sleep(60)
-
-# FastAPI for API endpoints and health check
+        
 app = FastAPI()
-
-# Health check endpoint
-@app.get("/health")
-def health():
-    return {"status": "ok"}
-
 app.include_router(api_router, prefix="/api")
 
-def run_fastapi():
-    uvicorn.run(app, host="0.0.0.0", port=8080, log_level="info")
-
-# Main startup logic
 async def main():
-    bot = Bot(
-        token=BOT_TOKEN,
-        default=DefaultBotProperties(parse_mode=ParseMode.HTML)
-    )
+    bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
+    dp = Dispatcher(storage=MemoryStorage())
+
     register_user_handlers(dp)
     register_admin_handlers(dp)
-    await set_bot_commands(bot)
-    asyncio.create_task(scheduler_loop(bot))
-    await dp.start_polling(bot)
+    dp.include_router(accounts.router)
+    dp.include_router(campaigns.router)
 
-# Set bot commands for menu
+    await set_bot_commands(bot)
+
+    asyncio.create_task(scheduler_loop())  # 🔁 Start scheduler loop
+
+    await dp.start_polling(bot)
+    
 async def set_bot_commands(bot: Bot):
     commands = [
         BotCommand(command="start", description="Start the bot"),
@@ -58,9 +62,18 @@ async def set_bot_commands(bot: Bot):
         BotCommand(command="language", description="Choose language"),
     ]
     await bot.set_my_commands(commands)
+async def on_startup(dispatcher):
+    asyncio.create_task(scheduler_loop(bot))
+    
+async def main():
+    bot = Bot(token=BOT_TOKEN, parse_mode=ParseMode.HTML)
+    dp = Dispatcher(storage=MemoryStorage())
 
-# Entry point
+    register_user_handlers(dp)
+    register_admin_handlers(dp)
+
+    await set_bot_commands(bot)
+    await dp.start_polling(bot)
+
 if __name__ == "__main__":
-    # Start FastAPI health check server in a separate thread
-    threading.Thread(target=run_fastapi, daemon=True).start()
     asyncio.run(main())
