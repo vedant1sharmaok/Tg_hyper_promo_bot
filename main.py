@@ -17,8 +17,8 @@ from scheduler import daily_report
 dp = Dispatcher(storage=MemoryStorage())
 
 # Routers
-dp.include_router(accounts.router)
-dp.include_router(campaigns.router)
+dp.include_router(account.router)
+dp.include_router(campaign.router)
 dp.include_router(logs.router)
 dp.include_router(scraper.router)
 dp.include_router(ai.router)
